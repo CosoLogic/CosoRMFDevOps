@@ -14,7 +14,7 @@ namespace RMF.DevOps.AzureDevOps
         private DataTable vulnerabilities = new();
         private string workitemType = "STIG Vulnerability";
 
-        public RMFSTIGVulnerabilities(string personalAccessToken, WorkItem implementStep, IDictionary<string, WorkItem> accessControls, string workingProject) : base(personalAccessToken, workingProject)
+        public RMFSTIGVulnerabilities(string personalAccessToken, WorkItem implementStep, IDictionary<string, WorkItem> accessControls, string workingProject, string orgUrl) : base(personalAccessToken, workingProject, orgUrl)
         {
             this.implementStep = implementStep;
             this.accessControls = accessControls;

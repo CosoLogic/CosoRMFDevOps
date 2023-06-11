@@ -15,19 +15,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="SourceDocs\AppDevStig.xlsx">
+    <Content Include="SourceDocs\AppDevStig.xlsx" Pack="true" PackagePath="wwwroot/files">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SourceDocs\AzureDatabaseSTIG.xlsx">
+    <Content Include="SourceDocs\AzureDatabaseSTIG.xlsx" Pack="true" PackagePath="wwwroot/files">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SourceDocs\NIST_SP-800-53_rev5.xlsx">
+    <Content Include="SourceDocs\NIST_SP-800-53_rev5.xlsx" Pack="true" PackagePath="wwwroot/files">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SourceDocs\RMF_Steps.xlsx">
+    <Content Include="SourceDocs\RMF_Steps.xlsx" Pack="true" PackagePath="wwwroot/files">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SourceDocs\sp800-53b-control-baselines.xlsx">
+    <Content Include="SourceDocs\sp800-53b-control-baselines.xlsx" Pack="true" PackagePath="wwwroot/files">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

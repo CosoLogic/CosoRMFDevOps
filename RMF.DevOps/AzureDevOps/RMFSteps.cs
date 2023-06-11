@@ -11,13 +11,15 @@ namespace RMF.DevOps.AzureDevOps
     {
         private readonly WorkItem epic;
         private readonly List<string> applicableControls;
+        private readonly string orgUrl;
         private DataTable excelSteps = new();
         private string workitemType = "RMF Step";
 
-        public RMFSteps(string personalAccessToken, WorkItem epic, string workingProject, List<string> applicableControls) : base(personalAccessToken, workingProject)
+        public RMFSteps(string personalAccessToken, WorkItem epic, string workingProject, List<string> applicableControls, string orgUrl) : base(personalAccessToken, workingProject, orgUrl)
         {
             this.epic = epic;
             this.applicableControls = applicableControls;
+            this.orgUrl = orgUrl;
             this.applicableControls = applicableControls;
             this.epic = epic;
         }
@@ -44,7 +46,7 @@ namespace RMF.DevOps.AzureDevOps
             await CreateStep("Authorize");
             await CreateStep("Monitor");
 
-            await new RMFAccessControls(base.personalAccessToken, implementStep, workingProject, applicableControls).GenerateAccessControls(stigs);
+            await new RMFAccessControls(base.personalAccessToken, implementStep, workingProject, applicableControls, orgUrl).GenerateAccessControls(stigs);
         }
 
         private async Task<WorkItem> CreateStep(string stepName)
