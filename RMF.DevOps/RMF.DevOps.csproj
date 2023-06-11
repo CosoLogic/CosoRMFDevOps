@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SourceDocs\AppDevStig.xlsx" />
+    <None Remove="SourceDocs\AzureDatabaseSTIG.xlsx" />
+    <None Remove="SourceDocs\NIST_SP-800-53_rev5.xlsx" />
+    <None Remove="SourceDocs\RMF_Steps.xlsx" />
+    <None Remove="SourceDocs\sp800-53b-control-baselines.xlsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SourceDocs\AppDevStig.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SourceDocs\AzureDatabaseSTIG.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SourceDocs\NIST_SP-800-53_rev5.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SourceDocs\RMF_Steps.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SourceDocs\sp800-53b-control-baselines.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.101.0" />
+    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="16.205.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="16.205.1" />
+  </ItemGroup>
+
+</Project>
