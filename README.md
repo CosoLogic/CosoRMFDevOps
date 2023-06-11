@@ -1,5 +1,5 @@
 # CosoRMFDevOps
 .Net 7 API for generating DevOps work items from NIST documentation
 
-# Demo
+# View the tool here
 https://cosoplatform.com/tools
