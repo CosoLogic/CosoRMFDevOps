@@ -10,7 +10,7 @@ namespace RMF.DevOps.AzureDevOps
         private readonly WorkItem epic;
         private string workitemType = "Documentation";
 
-        public Documents(string personalAccessToken, WorkItem epic, string workingProject, string orgUrl) : base(personalAccessToken, workingProject, orgUrl)
+        public Documents(string personalAccessToken, WorkItem epic, string workingProject) : base(personalAccessToken, workingProject)
         {
             this.epic = epic;
             this.workingProject = workingProject;

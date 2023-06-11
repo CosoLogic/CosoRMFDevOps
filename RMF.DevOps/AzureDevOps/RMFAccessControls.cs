@@ -11,15 +11,13 @@ namespace RMF.DevOps.AzureDevOps
     {
         private readonly WorkItem implementStep;
         private readonly List<string> applicableControls;
-        private readonly string orgUrl;
         private DataTable excelControls = new();
         private string workitemType = "Control";
 
-        public RMFAccessControls(string personalAccessToken, WorkItem implementStep, string workingProject, List<string> applicableControls, string orgUrl) : base(personalAccessToken, workingProject, orgUrl)
+        public RMFAccessControls(string personalAccessToken, WorkItem implementStep, string workingProject, List<string> applicableControls) : base(personalAccessToken, workingProject)
         {
             this.implementStep = implementStep;
             this.applicableControls = applicableControls;
-            this.orgUrl = orgUrl;
         }
 
         public async Task GenerateAccessControls(List<RMFSTIGTypes> stigs)
@@ -31,7 +29,7 @@ namespace RMF.DevOps.AzureDevOps
 
             var workItemsCreated = await CreateAccessControls(implementStep);
 
-            await new RMFSTIGVulnerabilities(base.personalAccessToken, implementStep, workItemsCreated, workingProject, orgUrl).GenerateStigVulnerabilities(stigs);
+            await new RMFSTIGVulnerabilities(base.personalAccessToken, implementStep, workItemsCreated, workingProject).GenerateStigVulnerabilities(stigs);
         }
 
         async Task<Dictionary<string, WorkItem>> CreateAccessControls(WorkItem implementStep)
