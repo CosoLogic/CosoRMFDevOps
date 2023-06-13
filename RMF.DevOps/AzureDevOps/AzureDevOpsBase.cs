@@ -12,16 +12,18 @@ namespace RMF.DevOps.AzureDevOps
 
         protected string workingProject = string.Empty;
         protected readonly string personalAccessToken;
+        private readonly string orgUrl;
 
-        protected AzureDevOpsBase(string personalAccessToken, string workingProject)
+        protected AzureDevOpsBase(string personalAccessToken, string workingProject, string orgUrl)
         {
             this.personalAccessToken = personalAccessToken;
             WorkingProject = workingProject;
+            this.orgUrl = orgUrl;
         }
 
         private WorkItemTrackingHttpClient GetClient()
         {
-            var connection = new VssConnection(OrgUrl, new VssBasicCredential(string.Empty, personalAccessToken));
+            var connection = new VssConnection(new Uri(orgUrl), new VssBasicCredential(string.Empty, personalAccessToken));
             return connection.GetClient<WorkItemTrackingHttpClient>();
         }
 
@@ -32,7 +34,6 @@ namespace RMF.DevOps.AzureDevOps
             get => workingProject;
             protected set => workingProject = value;
         }
-        private Uri OrgUrl { get; } = new("https://dev.azure.com/cspos");
 
         protected async Task CreateRelatedWorkItems(WorkItem item1, WorkItem item2)
         {
@@ -60,7 +61,7 @@ namespace RMF.DevOps.AzureDevOps
                     Value = new WorkItemRelation()
                     {
                         Rel = "System.LinkTypes.Related",
-                        Url = $"{OrgUrl}/_apis/wit/workItems/{item2.Id.Value}",
+                        Url = $"{orgUrl}/_apis/wit/workItems/{item2.Id.Value}",
                         Attributes = new Dictionary<string, object>() {
                         { "comment", "Linked" }
                     }
@@ -98,7 +99,7 @@ namespace RMF.DevOps.AzureDevOps
                     Value = new WorkItemRelation()
                     {
                         Rel = "System.LinkTypes.Hierarchy-Forward",
-                        Url = $"{OrgUrl}/_apis/wit/workItems/{child.Id.Value}",
+                        Url = $"{orgUrl}/_apis/wit/workItems/{child.Id.Value}",
                         Attributes = new Dictionary<string, object>() {
                         { "comment", "Linked to child" }
                     }

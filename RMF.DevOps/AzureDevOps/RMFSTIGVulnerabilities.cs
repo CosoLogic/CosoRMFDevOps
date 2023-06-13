@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Services.WebApi.Patch;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 using RMF.DevOps.Enumerations;
 using RMF.DevOps.Excel;
+using RMF.DevOps.Utilities;
 using System.Data;
 
 namespace RMF.DevOps.AzureDevOps
@@ -14,7 +15,7 @@ namespace RMF.DevOps.AzureDevOps
         private DataTable vulnerabilities = new();
         private string workitemType = "STIG Vulnerability";
 
-        public RMFSTIGVulnerabilities(string personalAccessToken, WorkItem implementStep, IDictionary<string, WorkItem> accessControls, string workingProject) : base(personalAccessToken, workingProject)
+        public RMFSTIGVulnerabilities(string personalAccessToken, WorkItem implementStep, IDictionary<string, WorkItem> accessControls, string workingProject, string orgUrl) : base(personalAccessToken, workingProject, orgUrl)
         {
             this.implementStep = implementStep;
             this.accessControls = accessControls;
@@ -31,19 +32,65 @@ namespace RMF.DevOps.AzureDevOps
 
             if (stigs.Contains(RMFSTIGTypes.AppDevSTIG))
             {
-                var appDevSTIGFile = "AppDevStig.xlsx";
-                var appDevSTIGFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SourceDocs", appDevSTIGFile);
+                var stig = await FileDownloader.DownloadFileFromGitHub("AppDevStig.xlsx");
 
-                vulnerabilities = ExcelUtility.GetExcelData(appDevSTIGFullPath);
+                vulnerabilities = ExcelUtility.GetExcelData(stig);
                 await CreateVulnerabilities();
             }
             
             if (stigs.Contains(RMFSTIGTypes.AzureDatabaseSTIG))
             {
-                var azureDatabaseSTIG = "AzureDatabaseSTIG.xlsx";
-                var azureDatabaseSTIGFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SourceDocs", azureDatabaseSTIG);
+                var stig = await FileDownloader.DownloadFileFromGitHub("AzureDatabaseSTIG.xlsx");
 
-                vulnerabilities = ExcelUtility.GetExcelData(azureDatabaseSTIGFullPath);
+                vulnerabilities = ExcelUtility.GetExcelData(stig);
+                await CreateVulnerabilities();
+            }
+
+            if (stigs.Contains(RMFSTIGTypes.MSSQLServer2014Instance))
+            {
+                var stig = await FileDownloader.DownloadFileFromGitHub("MS_SQL_Server_2014_Instance.xlsx");
+
+                vulnerabilities = ExcelUtility.GetExcelData(stig);
+                await CreateVulnerabilities();
+            }
+
+            if (stigs.Contains(RMFSTIGTypes.MSSQLServer2014Database))
+            {
+                var stig = await FileDownloader.DownloadFileFromGitHub("MS_SQL_Server_2014_Database.xlsx");
+
+                vulnerabilities = ExcelUtility.GetExcelData(stig);
+                await CreateVulnerabilities();
+            }
+
+            if (stigs.Contains(RMFSTIGTypes.MSSQLServer2016Instance))
+            {
+                var stig = await FileDownloader.DownloadFileFromGitHub("MS_SQL_Server_2016_Instance.xlsx");
+
+                vulnerabilities = ExcelUtility.GetExcelData(stig);
+                await CreateVulnerabilities();
+            }
+
+            if (stigs.Contains(RMFSTIGTypes.MSSQLServer2016Database))
+            {
+                var stig = await FileDownloader.DownloadFileFromGitHub("MS_SQL_Server_2016_Database.xlsx");
+
+                vulnerabilities = ExcelUtility.GetExcelData(stig);
+                await CreateVulnerabilities();
+            }
+
+            if (stigs.Contains(RMFSTIGTypes.MSIIS10Site))
+            {
+                var stig = await FileDownloader.DownloadFileFromGitHub("MS_IIS_10_Site.xlsx");
+
+                vulnerabilities = ExcelUtility.GetExcelData(stig);
+                await CreateVulnerabilities();
+            }
+
+            if (stigs.Contains(RMFSTIGTypes.MSIIS10Server))
+            {
+                var stig = await FileDownloader.DownloadFileFromGitHub("MS_IIS_10_Server.xlsx");
+
+                vulnerabilities = ExcelUtility.GetExcelData(stig);
                 await CreateVulnerabilities();
             }
         }

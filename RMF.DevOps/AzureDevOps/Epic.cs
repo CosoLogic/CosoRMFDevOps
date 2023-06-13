@@ -8,7 +8,7 @@ namespace RMF.DevOps.AzureDevOps
     {
         private readonly string impactLevel;
 
-        public Epic(string personalAccessToken, string impactLevel, string workingProject): base(personalAccessToken, workingProject)
+        public Epic(string personalAccessToken, string impactLevel, string workingProject, string orgUrl): base(personalAccessToken, workingProject, orgUrl)
         {
             this.impactLevel = impactLevel;
         }

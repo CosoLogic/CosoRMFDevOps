@@ -1,16 +1,21 @@
 ﻿using RMF.DevOps.Excel;
+using RMF.DevOps.Utilities;
 using System.Data;
 
 namespace RMF.DevOps.AzureDevOps
 {
     public class RMFControlSelection
     {
-        public Tuple<List<string>, string> GetControlSelection(string impactLevel)
+        public async Task<Tuple<List<string>, string>> GetControlSelection(string impactLevel)
         {
-            string controlsDocumentPath = "sp800-53b-control-baselines.xlsx";
-            string controlsDocumentFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SourceDocs", controlsDocumentPath);
+            if (impactLevel.ToLower() == "skip")
+            {
+                return new Tuple<List<string>, string>(new List<string>(), impactLevel);
+            }
 
-            var excelControls = ExcelUtility.GetExcelData(controlsDocumentFullPath);
+            string controlsDocumentPath = await FileDownloader.DownloadFileFromGitHub("sp800-53b-control-baselines.xlsx");
+
+            var excelControls = ExcelUtility.GetExcelData(controlsDocumentPath);
 
             var applicableControls = new List<string>();
             foreach (var control in excelControls.AsEnumerable())

@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Services.WebApi.Patch;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 using RMF.DevOps.Enumerations;
 using RMF.DevOps.Excel;
+using RMF.DevOps.Utilities;
 using System.Data;
 
 namespace RMF.DevOps.AzureDevOps
@@ -11,25 +12,24 @@ namespace RMF.DevOps.AzureDevOps
     {
         private readonly WorkItem implementStep;
         private readonly List<string> applicableControls;
+        private readonly string orgUrl;
         private DataTable excelControls = new();
         private string workitemType = "Control";
 
-        public RMFAccessControls(string personalAccessToken, WorkItem implementStep, string workingProject, List<string> applicableControls) : base(personalAccessToken, workingProject)
+        public RMFAccessControls(string personalAccessToken, WorkItem implementStep, string workingProject, List<string> applicableControls, string orgUrl) : base(personalAccessToken, workingProject, orgUrl)
         {
             this.implementStep = implementStep;
             this.applicableControls = applicableControls;
+            this.orgUrl = orgUrl;
         }
 
-        public async Task GenerateAccessControls(List<RMFSTIGTypes> stigs)
+        public async Task<Dictionary<string, WorkItem>> GenerateAccessControls(List<RMFSTIGTypes> stigs)
         {
-            const string controlsDocumentPath = "NIST_SP-800-53_rev5.xlsx";
-            var controlsDocumentFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SourceDocs", controlsDocumentPath);
+            string controlsDocumentPath = await FileDownloader.DownloadFileFromGitHub("NIST_SP-800-53_rev5.xlsx");
 
-            excelControls = ExcelUtility.GetExcelData(controlsDocumentFullPath);
+            excelControls = ExcelUtility.GetExcelData(controlsDocumentPath);
 
-            var workItemsCreated = await CreateAccessControls(implementStep);
-
-            await new RMFSTIGVulnerabilities(base.personalAccessToken, implementStep, workItemsCreated, workingProject).GenerateStigVulnerabilities(stigs);
+            return await CreateAccessControls(implementStep);
         }
 
         async Task<Dictionary<string, WorkItem>> CreateAccessControls(WorkItem implementStep)

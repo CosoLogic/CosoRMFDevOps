@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Services.WebApi.Patch;
 using Microsoft.VisualStudio.Services.WebApi.Patch.Json;
 using RMF.DevOps.Enumerations;
 using RMF.DevOps.Excel;
+using RMF.DevOps.Utilities;
 using System.Data;
 
 namespace RMF.DevOps.AzureDevOps
@@ -11,18 +12,20 @@ namespace RMF.DevOps.AzureDevOps
     {
         private readonly WorkItem epic;
         private readonly List<string> applicableControls;
+        private readonly string orgUrl;
         private DataTable excelSteps = new();
         private string workitemType = "RMF Step";
 
-        public RMFSteps(string personalAccessToken, WorkItem epic, string workingProject, List<string> applicableControls) : base(personalAccessToken, workingProject)
+        public RMFSteps(string personalAccessToken, WorkItem epic, string workingProject, List<string> applicableControls, string orgUrl) : base(personalAccessToken, workingProject, orgUrl)
         {
             this.epic = epic;
             this.applicableControls = applicableControls;
+            this.orgUrl = orgUrl;
             this.applicableControls = applicableControls;
             this.epic = epic;
         }
 
-        public async Task GenerateRMFSteps(List<RMFSTIGTypes> stigs)
+        public async Task GenerateRMFSteps(List<RMFSTIGTypes> stigs, bool skipControls)
         {
             var workItemTypes = await WitClient.GetWorkItemTypesAsync(workingProject);
 
@@ -31,10 +34,9 @@ namespace RMF.DevOps.AzureDevOps
                 workitemType = "User Story";
             }
 
-            var stepsDocumentPath = "RMF_Steps.xlsx";
-            var stepsDocumentFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SourceDocs", stepsDocumentPath);
+            var stepsDocumentPath = await FileDownloader.DownloadFileFromGitHub("RMF_Steps.xlsx");
 
-            excelSteps = ExcelUtility.GetExcelData(stepsDocumentFullPath);
+            excelSteps = ExcelUtility.GetExcelData(stepsDocumentPath);
 
             await CreateStep("Prepare");
             await CreateStep("Categorize");
@@ -44,7 +46,14 @@ namespace RMF.DevOps.AzureDevOps
             await CreateStep("Authorize");
             await CreateStep("Monitor");
 
-            await new RMFAccessControls(base.personalAccessToken, implementStep, workingProject, applicableControls).GenerateAccessControls(stigs);
+            var workItemsCreated = new Dictionary<string, WorkItem>();
+                
+            if (!skipControls)
+            {
+                workItemsCreated = await new RMFAccessControls(base.personalAccessToken, implementStep, workingProject, applicableControls, orgUrl).GenerateAccessControls(stigs);
+            }
+
+            await new RMFSTIGVulnerabilities(base.personalAccessToken, implementStep, workItemsCreated, workingProject, orgUrl).GenerateStigVulnerabilities(stigs);
         }
 
         private async Task<WorkItem> CreateStep(string stepName)
