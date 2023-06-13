@@ -1,1 +1,5 @@
 /.idea/.idea.CosoRMFDevOps.dir/.idea/.gitignore
+/.vs/CosoRMFDevOps/v17
+/RMF.DevOps/.vs/RMF.DevOps/FileContentIndex
+/RMF.DevOps/obj/Debug/net7.0
+/RMF.DevOps/obj
